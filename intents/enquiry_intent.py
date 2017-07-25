@@ -26,15 +26,23 @@ class EnquiryIntent:
         }
         view_response = requests.post(url=VIEW_URL, data=view_data).content
         html = PyQuery(view_response)
-        tax = html('.status-bar > div').eq(0)
-        tax_valid = tax('.isValid')
-        tax_valid_text = tax_valid('p').text()
-        tax_valid_valid = bool(tax_valid.length)
-        response = {
-            'tax': {
-                'text': tax_valid_text,
-                'valid': tax_valid_valid
+        response = {}
+        for index, section_name in enumerate(['tax', 'mot']):
+            section = html('.status-bar > div').eq(index)
+            section_valid = section('.isValid')
+            section_invalid = section('.isInvalid')
+            is_populated = section_valid or section_invalid
+            is_valid = False
+            text = 'Unknown'
+            if is_populated:
+                is_valid = section_valid and not section_invalid
+                if is_valid:
+                    text = section_valid('p').text()
+                else:
+                    text = section_invalid('p').text()
+            response[section_name] =  {
+                'text': text,
+                'valid': bool(is_valid)
             }
-        }
         print(response)
         return response

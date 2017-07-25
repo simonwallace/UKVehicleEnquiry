@@ -18,9 +18,11 @@ def enquiry(subject, vehicle, validity, reg_i, reg_ii, reg_iii, reg_iv, reg_v, r
     if reg:
         intent = EnquiryIntent()
         result = intent.execute(reg)
-        speech_text = "{} {} {} {} - {} {}".format(subject, vehicle, validity, reg,
-                                                   result['tax']['valid'],
-                                                   result['tax']['text'])
+        speech_text = "{} {} {} {} - {} {} - {} {}".format(subject, vehicle, validity, reg,
+                                                           result['tax']['valid'],
+                                                           result['tax']['text'],
+                                                           result['mot']['valid'],
+                                                           result['mot']['text'])
     return statement(speech_text).simple_card(TITLE, speech_text)
 
 if __name__ == '__main__':
