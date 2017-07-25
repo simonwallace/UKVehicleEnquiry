@@ -17,8 +17,17 @@ def enquiry(subject, vehicle, validity, reg_i, reg_ii, reg_iii, reg_iv, reg_v, r
     speech_text = ''
     display_text = ''
     if reg:
+        speech_text += reg + '. '
+        display_text += reg + '\n'
         intent = EnquiryIntent()
         result = intent.execute(reg)
+        if result['make']:
+            speech_text += result['make'] + '. '
+            display_text += result['make'] + ' '
+        if result['colour']:
+            speech_text += result['colour'] + '. '
+            display_text += '(' + result['colour'] + ')'
+        display_text += '\n'
         if result['tax']['unknown'] and result['mot']['unknown']:
             speech_text += 'Could not find any details for this vehicle. '
             display_text += '? Vehicle\n'
@@ -48,7 +57,7 @@ def enquiry(subject, vehicle, validity, reg_i, reg_ii, reg_iii, reg_iv, reg_v, r
                 speech_text += result['mot']['text'] + ' '
                 display_text += result['mot']['text'] + '\n'
     else:
-        speech_text = 'Registration not supplied'
+        speech_text = 'Registration not supplied.'
     return statement(speech_text).simple_card(TITLE, display_text)
 
 if __name__ == '__main__':

@@ -26,7 +26,11 @@ class EnquiryIntent:
         }
         view_response = requests.post(url=VIEW_URL, data=view_data).content
         html = PyQuery(view_response)
-        response = {}
+        response = {
+            'colour': colour,
+            'make': make,
+            'vrm': vrm
+        }
         for index, section_name in enumerate(['tax', 'mot']):
             section = html('.status-bar > div').eq(index)
             section_valid = section('.isValid')
