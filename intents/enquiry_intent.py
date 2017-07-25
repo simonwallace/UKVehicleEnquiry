@@ -42,6 +42,7 @@ class EnquiryIntent:
                     text = section_invalid('p').text()
             response[section_name] =  {
                 'text': text,
+                'unknown': not bool(is_populated),
                 'valid': bool(is_valid)
             }
         print(response)
