@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_ask import Ask, statement
+from flask_ask import Ask, question, statement
 from intents.enquiry_intent import EnquiryIntent
 from utilities.phonetic import Phonetic
 
@@ -8,8 +8,13 @@ TITLE = 'UK Vehicle Enquiry'
 app = Flask(__name__)
 ask = Ask(app, '/')
 
+@ask.launch
+def launch():
+    speech_text = 'What is the registration you want to check?'
+    return question(speech_text).reprompt(speech_text).simple_card('Launch', speech_text)
+
 @ask.intent('Enquiry')
-def enquiry(subject, vehicle, validity, reg_i, reg_ii, reg_iii, reg_iv, reg_v, reg_vi, reg_vii):
+def enquiry(reg_i, reg_ii, reg_iii, reg_iv, reg_v, reg_vi, reg_vii):
     phonetic = Phonetic()
     reg_list = [reg_i, reg_ii, reg_iii, reg_iv, reg_v, reg_vi, reg_vii]
     reg_list = phonetic.from_phonetic_or_value(reg_list)
@@ -58,7 +63,16 @@ def enquiry(subject, vehicle, validity, reg_i, reg_ii, reg_iii, reg_iv, reg_v, r
                 display_text += result['mot']['text'] + '\n'
     else:
         speech_text = 'Registration not supplied.'
-    return statement(speech_text).simple_card(TITLE, display_text)
+    return statement(speech_text).simple_card('Enquiry', display_text)
+
+@ask.intent('AMAZON.HelpIntent')
+def help():
+    speech_text = 'State the registration of the vehicle that you want to check'
+    return question(speech_text).reprompt(speech_text).simple_card('Help', speech_text)
+
+@ask.session_ended
+def session_ended():
+    return "{}", 200
 
 if __name__ == '__main__':
     app.run()

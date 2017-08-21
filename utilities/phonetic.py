@@ -14,7 +14,7 @@ class Phonetic:
         args = list(*args)
         letters = []
         for arg in args:
-            word = str(arg).lower()
+            word = str(arg).lower().replace('.', '')
             for key, value in self.ALPHABET.items():
                 if value == word:
                     letters.append(key)
@@ -24,7 +24,7 @@ class Phonetic:
         args = list(*args)
         letters = []
         for arg in args:
-            word = str(arg).lower()
+            word = str(arg).lower().replace('.', '')
             match = None
             for key, value in self.ALPHABET.items():
                 if value == word:
@@ -36,7 +36,7 @@ class Phonetic:
         args = list(*args)
         words = []
         for arg in args:
-            letter = str(arg).lower()
+            letter = str(arg).lower().replace('.', '')
             if letter in self.ALPHABET:
                 words.append(self.ALPHABET[letter])
         return words
